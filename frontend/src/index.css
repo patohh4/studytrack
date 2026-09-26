@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+@import "tailwindcss";
+
+/* ─── Tailwind v4: dark mode через клас .dark на <html> ──────────────── */
+@variant dark (&:where(.dark, .dark *));
+
+/* ─── CSS Variables: light theme (default) ───────────────────────────── */
+:root {
+  --bg-base:       #f5f5f7;
+  --bg-surface:    #ffffff;
+  --bg-elevated:   #fafafa;
+  --bg-input:      #f3f3f5;
+  --bg-muted:      #f1f1f3;
+
+  --text-primary:  #1d1d1f;
+  --text-secondary:#6e6e73;
+  --text-muted:    #9a9aa0;
+
+  --border:        #e5e5ea;
+  --border-strong: #d1d1d6;
+
+  --accent:        #2563eb;   /* blue-600 */
+  --accent-hover:  #1d4ed8;
+
+  --sidebar-bg:    #ffffff;
+  --sidebar-text:  #1d1d1f;
+
+  color-scheme: light;
+}
+
+/* ─── CSS Variables: dark theme ──────────────────────────────────────── */
+.dark {
+  --bg-base:       #0f0f10;
+  --bg-surface:    #1c1c1e;
+  --bg-elevated:   #2c2c2e;
+  --bg-input:      #2c2c2e;
+  --bg-muted:      #1c1c1e;
+
+  --text-primary:  #f5f5f7;
+  --text-secondary:#a1a1a6;
+  --text-muted:    #636366;
+
+  --border:        #38383a;
+  --border-strong: #48484a;
+
+  --accent:        #3b82f6;
+  --accent-hover:  #60a5fa;
+
+  --sidebar-bg:    #1c1c1e;
+  --sidebar-text:  #f5f5f7;
+
+  color-scheme: dark;
+}
+
+/* ─── Base styles ────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar        { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: var(--border-strong); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ─── Compact mode ───────────────────────────────────────────────────── */
+/* Зменшує padding і приховує другорядні елементи в картках завдань */
+.compact [data-compact-hide] {
+  display: none !important;
+}
+
+.compact [data-compact-p] {
+  padding-top:    0.5rem !important;   /* py-2 */
+  padding-bottom: 0.5rem !important;
+}

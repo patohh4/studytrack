@@ -1,0 +1,4 @@
+project_id = "studytrack"
+
+[functions.moodle-sync]
+verify_jwt = true

@@ -1,0 +1,94 @@
+{
+  "format": "kiro-session-export-v1",
+  "metadata": {
+    "session_id": "b00eadf0-1b40-4001-a068-fea1f5b1d479",
+    "cwd": "/Users/stasrusnak/studytrack/frontend",
+    "created_at": "2026-09-24T20:36:50.042185Z",
+    "updated_at": "2026-09-24T20:37:19.132393Z",
+    "title": null,
+    "session_created_reason": "subagent",
+    "session_state": {
+      "version": "v1",
+      "conversation_metadata": {
+        "user_turn_metadatas": [
+          {
+            "loop_id": {
+              "agent_id": {
+                "name": "kiro_default",
+                "parent_id": null,
+                "rand": null
+              },
+              "rand": 903957109
+            },
+            "result": {
+              "Err": {
+                "Stream": {
+                  "original_request_id": "0178e3be-cd60-4458-ba8f-5bfc78123b95",
+                  "original_status_code": 400,
+                  "original_message": null,
+                  "kind": {
+                    "kind": "monthlyLimitReached",
+                    "data": {
+                      "message": "The monthly usage limit has been reached"
+                    }
+                  }
+                }
+              }
+            },
+            "message_ids": [
+              "00a928fe-2b77-437b-9b9d-f45086983c72",
+              null
+            ],
+            "total_request_count": 1,
+            "number_of_cycles": 0,
+            "builtin_tool_uses": 0,
+            "turn_duration": {
+              "secs": 0,
+              "nanos": 726150625
+            },
+            "end_reason": "Error",
+            "end_timestamp": "2026-09-24T20:37:03.145543Z",
+            "input_token_count": 0,
+            "output_token_count": 0,
+            "cache_read_input_token_count": 0,
+            "cache_write_input_token_count": 0,
+            "model": "auto",
+            "assistant_response_length": 0,
+            "request_attempts": 1,
+            "context_usage_percentage": null,
+            "final_context_usage_percentage": null,
+            "metering_usage": [],
+            "user_prompt_length": 685
+          }
+        ],
+        "last_context_usage": null,
+        "user_turn_start_request": null,
+        "last_request": null
+      },
+      "rts_model_state": {
+        "conversation_id": "b00eadf0-1b40-4001-a068-fea1f5b1d479",
+        "model_info": {
+          "model_id": "auto",
+          "context_window_tokens": 200000
+        },
+        "context_usage_percentage": null
+      },
+      "permissions": {
+        "filesystem": {
+          "allowed_read_paths": [
+            "/Users/stasrusnak/studytrack/frontend"
+          ],
+          "allowed_write_paths": [],
+          "denied_read_paths": [],
+          "denied_write_paths": []
+        },
+        "trusted_tools": [],
+        "denied_tools": [],
+        "allowed_commands": []
+      },
+      "agent_name": "kiro_default",
+      "goal": null
+    }
+  },
+  "log_entries": []
+}
