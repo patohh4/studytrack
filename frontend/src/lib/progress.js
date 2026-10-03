@@ -2,34 +2,34 @@ const defaultProgress = {
   completedIds: [],
   streak: 0,
   lastCompletedDate: null, // "YYYY-MM-DD" — день останнього виконаного завдання
-};
+}
 
-const getProgressKey = (userId) => `studytrack-progress-v2-${userId || "guest"}`;
+const getProgressKey = (userId) => `studytrack-progress-v2-${userId || 'guest'}`
 
 export function loadProgress(userId) {
   try {
-    const stored = localStorage.getItem(getProgressKey(userId));
-    if (!stored) return defaultProgress;
+    const stored = localStorage.getItem(getProgressKey(userId))
+    if (!stored) return defaultProgress
 
-    const parsed = JSON.parse(stored);
+    const parsed = JSON.parse(stored)
     return {
       completedIds: Array.isArray(parsed.completedIds) ? parsed.completedIds : [],
       streak: Number.isFinite(parsed.streak) ? parsed.streak : 0,
       lastCompletedDate: parsed.lastCompletedDate || null,
-    };
+    }
   } catch {
-    return defaultProgress;
+    return defaultProgress
   }
 }
 
 export function saveProgress(userId, progress) {
-  localStorage.setItem(getProgressKey(userId), JSON.stringify(progress));
+  localStorage.setItem(getProgressKey(userId), JSON.stringify(progress))
 }
 
 /** Повертає рядок "YYYY-MM-DD" для поточного локального дня */
 export function todayStr() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
 /**
@@ -42,28 +42,28 @@ export function calcStreak(tasks) {
     tasks
       .filter((t) => t.completed_at)
       .map((t) => {
-        const d = new Date(t.completed_at);
-        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-      })
-  );
+        const d = new Date(t.completed_at)
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+      }),
+  )
 
-  if (days.size === 0) return 0;
+  if (days.size === 0) return 0
 
-  let streak = 0;
-  const today = new Date();
+  let streak = 0
+  const today = new Date()
 
   for (let i = 0; i < 365; i++) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
-    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    const d = new Date(today)
+    d.setDate(d.getDate() - i)
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
     if (days.has(key)) {
-      streak++;
+      streak++
     } else if (i > 0) {
       // Пропуск — стрік перервано
-      break;
+      break
     }
     // i === 0 (сьогодні) — якщо сьогодні нічого не виконано, продовжуємо перевіряти вчора
   }
 
-  return streak;
+  return streak
 }
