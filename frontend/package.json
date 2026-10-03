@@ -7,7 +7,19 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "cd .. && husky frontend/.husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,json,md,html}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.116.0",
@@ -22,10 +34,14 @@
     "@vitejs/plugin-react": "^6.1.1",
     "autoprefixer": "^10.6.0",
     "eslint": "^10.10.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.6",
     "globals": "^17.12.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
     "postcss": "^8.5.28",
+    "prettier": "^3.9.9",
     "tailwindcss": "^4.3.3",
     "vite": "^8.3.0"
   }
