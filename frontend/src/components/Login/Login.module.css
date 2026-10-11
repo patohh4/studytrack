@@ -1,0 +1,149 @@
+.page {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  width: 100%;
+  max-width: 960px;
+  overflow: hidden;
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: 0 24px 80px rgba(31, 41, 55, 0.12);
+}
+
+.promo {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 48px;
+  padding: 48px;
+  background: var(--navy);
+  color: #fff;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.brandIcon {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: var(--yellow);
+  color: var(--navy);
+}
+
+.eyebrowLight {
+  margin-bottom: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #fde047;
+}
+
+.promoTitle {
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.promoNote {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.formSide {
+  padding: 48px;
+}
+
+.eyebrow {
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title {
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.subtitle {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.field input {
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+  outline: none;
+}
+
+.field input:focus {
+  border-color: var(--navy);
+  background: var(--surface);
+}
+
+.switch {
+  margin-top: 20px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-weight: 600;
+  color: var(--navy);
+  cursor: pointer;
+}
+
+@media (max-width: 800px) {
+  .card {
+    grid-template-columns: 1fr;
+  }
+
+  .promo {
+    display: none;
+  }
+
+  .formSide {
+    padding: 32px 24px;
+  }
+}

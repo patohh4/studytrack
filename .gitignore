@@ -1,0 +1,14 @@
+# Extension — ключі не комітити
+extension/config.js
+
+# Frontend
+frontend/.env
+frontend/node_modules/
+frontend/dist/
+
+# Supabase
+supabase/.temp/
+
+# OS
+.DS_Store
+Thumbs.db
