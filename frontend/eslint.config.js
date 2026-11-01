@@ -20,6 +20,10 @@ export default defineConfig([
     },
   },
   {
+    files: ["src/test/**"],
+    rules: { "react-refresh/only-export-components": "off" },
+  },
+  {
     files: ["**/*.test.{js,jsx}"],
     languageOptions: { globals: globals.node },
   },

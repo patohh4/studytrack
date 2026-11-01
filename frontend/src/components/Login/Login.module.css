@@ -147,3 +147,19 @@
     padding: 32px 24px;
   }
 }
+
+.error {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fee2e2;
+  color: var(--danger);
+  font-size: 14px;
+}
+
+.success {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 14px;
+}

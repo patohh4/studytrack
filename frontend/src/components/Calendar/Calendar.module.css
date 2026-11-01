@@ -1,5 +1,13 @@
 .header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
   margin-bottom: 24px;
+}
+
+.nav {
+  display: flex;
+  gap: 8px;
 }
 
 .eyebrow {
@@ -63,6 +71,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-decoration: none;
 }
 
 @media (max-width: 600px) {

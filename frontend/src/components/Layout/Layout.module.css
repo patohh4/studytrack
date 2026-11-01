@@ -91,9 +91,12 @@
 }
 
 .logout {
+  padding: 0;
+  border: 0;
+  background: none;
   font-size: 12px;
   color: var(--yellow);
-  text-decoration: none;
+  cursor: pointer;
 }
 
 .content {

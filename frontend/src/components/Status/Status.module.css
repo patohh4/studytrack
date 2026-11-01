@@ -1,0 +1,12 @@
+.note {
+  padding: 24px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--muted);
+  text-align: center;
+}
+
+.error {
+  background: #fee2e2;
+  color: var(--danger);
+}

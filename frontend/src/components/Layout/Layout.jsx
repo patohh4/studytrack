@@ -1,4 +1,5 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth.js";
 import styles from "./Layout.module.css";
 
 const links = [
@@ -8,6 +9,21 @@ const links = [
 ];
 
 export default function Layout() {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+  const name = user?.user_metadata?.full_name || user?.email || "Користувач";
+  const initials = name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/login");
+  };
+
   return (
     <div className={styles.shell}>
       <aside className={styles.sidebar}>
@@ -32,12 +48,12 @@ export default function Layout() {
         </nav>
 
         <div className={styles.user}>
-          <span className={styles.avatar}>СР</span>
+          <span className={styles.avatar}>{initials}</span>
           <div>
-            <p className={styles.userName}>Станіслав Р.</p>
-            <NavLink to="/login" className={styles.logout}>
+            <p className={styles.userName}>{name}</p>
+            <button type="button" className={styles.logout} onClick={handleLogout}>
               Вийти
-            </NavLink>
+            </button>
           </div>
         </div>
       </aside>

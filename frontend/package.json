@@ -12,7 +12,7 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "cy:open": "cypress open",
-    "e2e": "start-server-and-test dev http://localhost:5173 \"cypress run\"",
+    "e2e": "VITE_SUPABASE_URL=https://e2e.supabase.test VITE_SUPABASE_ANON_KEY=e2e-key start-server-and-test dev http://localhost:5173 \"cypress run\"",
     "prepare": "cd .. && husky frontend/.husky"
   },
   "lint-staged": {
@@ -25,7 +25,7 @@
     ]
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.116.0",
+    "@tanstack/react-query": "^5.105.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.4"
@@ -33,6 +33,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
     "@vitejs/plugin-react": "^6.1.1",
     "cypress": "^16.1.1",
     "eslint": "^10.10.0",

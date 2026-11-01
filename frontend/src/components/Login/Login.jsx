@@ -1,15 +1,44 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import Button from "../Button/Button.jsx";
+import { useAuth } from "../../hooks/useAuth.js";
 import styles from "./Login.module.css";
 
 export default function Login() {
   const [isRegister, setIsRegister] = useState(false);
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const { session, signIn, signUp, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  if (session) return <Navigate to="/tasks" replace />;
+
+  const update = (field) => (event) => setForm({ ...form, [field]: event.target.value });
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    navigate("/tasks"); // без бізнес-логіки: просто перехід на головну
+    setError(null);
+    setMessage(null);
+    setLoading(true);
+    try {
+      if (isRegister) {
+        const { needsConfirmation } = await signUp(form.email, form.password, form.name);
+        if (needsConfirmation) {
+          setMessage("Реєстрація успішна. Підтвердіть пошту за листом, а потім увійдіть.");
+          setIsRegister(false);
+          return;
+        }
+      } else {
+        await signIn(form.email, form.password);
+      }
+      navigate("/tasks");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -38,20 +67,48 @@ export default function Login() {
             {isRegister && (
               <label className={styles.field}>
                 Ім&apos;я
-                <input type="text" placeholder="Станіслав" />
+                <input
+                  type="text"
+                  placeholder="Станіслав"
+                  value={form.name}
+                  onChange={update("name")}
+                />
               </label>
             )}
             <label className={styles.field}>
               Email
-              <input type="email" placeholder="you@uzhnu.edu.ua" />
+              <input
+                type="email"
+                placeholder="you@uzhnu.edu.ua"
+                value={form.email}
+                onChange={update("email")}
+                required
+              />
             </label>
             <label className={styles.field}>
               Пароль
-              <input type="password" placeholder="••••••••" />
+              <input
+                type="password"
+                placeholder="••••••••"
+                value={form.password}
+                onChange={update("password")}
+                required
+                minLength={6}
+              />
             </label>
 
-            <Button type="submit">{isRegister ? "Зареєструватися" : "Увійти"}</Button>
-            <Button type="button" variant="secondary" icon="account_circle">
+            {error && <p className={styles.error}>{error}</p>}
+            {message && <p className={styles.success}>{message}</p>}
+
+            <Button type="submit" disabled={loading}>
+              {isRegister ? "Зареєструватися" : "Увійти"}
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              icon="account_circle"
+              onClick={signInWithGoogle}
+            >
               Продовжити з Google
             </Button>
           </form>
