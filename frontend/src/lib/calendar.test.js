@@ -14,10 +14,10 @@ test("leap year February has 29 days", () => {
 
 test("groups tasks by day of the selected month", () => {
   const tasks = [
-    { id: 1, due_at: new Date(2026, 9, 12, 10).toISOString() },
-    { id: 2, due_at: new Date(2026, 9, 12, 15).toISOString() },
-    { id: 3, due_at: new Date(2026, 10, 1, 10).toISOString() },
-    { id: 4, due_at: null },
+    { id: 1, dueAt: new Date(2026, 9, 12, 10).toISOString() },
+    { id: 2, dueAt: new Date(2026, 9, 12, 15).toISOString() },
+    { id: 3, dueAt: new Date(2026, 10, 1, 10).toISOString() },
+    { id: 4, dueAt: null },
   ];
   const grouped = groupByDay(tasks, 2026, 9);
   expect(grouped[12].map((t) => t.id)).toEqual([1, 2]);

@@ -1,28 +1,24 @@
-const API = "https://e2e.supabase.test";
+const API = "http://localhost:3001/api";
 
-const session = {
-  access_token: "e2e-token",
-  refresh_token: "e2e-refresh",
-  expires_in: 3600,
-  user: { id: "user-1", email: "stas@uzhnu.edu.ua" },
-};
+const TOKEN = "e2e-token";
+const USER = { id: "user-1", name: "Стас", email: "stas@uzhnu.edu.ua" };
 
 const tasks = [
   {
     id: "t1",
-    title: "Лабораторна №6",
-    description: "Реалізувати хуки",
-    due_at: "2030-01-10T10:00:00Z",
-    completed_at: null,
-    course_id: null,
-    courses: null,
+    title: "Лабораторна №7",
+    description: "Реалізувати Express API",
+    dueDate: "2030-01-10T10:00:00Z",
+    status: "todo",
+    completedAt: null,
+    courseId: null,
   },
 ];
 
 describe("StudyTrack", () => {
   beforeEach(() => {
-    cy.intercept("GET", `${API}/rest/v1/tasks*`, { body: tasks });
-    cy.intercept("GET", `${API}/rest/v1/courses*`, { body: [] });
+    cy.intercept("GET", `${API}/tasks*`, { body: tasks });
+    cy.intercept("GET", `${API}/courses*`, { body: [] });
   });
 
   it("redirects guests to the login page", () => {
@@ -32,28 +28,28 @@ describe("StudyTrack", () => {
   });
 
   it("shows server error for wrong credentials", () => {
-    cy.intercept("POST", `${API}/auth/v1/token*`, {
-      statusCode: 400,
-      body: { error_description: "Invalid login credentials" },
+    cy.intercept("POST", `${API}/auth/login`, {
+      statusCode: 401,
+      body: { message: "Невірний email або пароль" },
     });
     cy.visit("/login");
     cy.get('input[type="email"]').type("stas@uzhnu.edu.ua");
     cy.get('input[type="password"]').type("wrong-password");
     cy.get('button[type="submit"]').click();
-    cy.contains("Invalid login credentials");
+    cy.contains("Невірний email або пароль");
   });
 
   it("logs in, shows tasks and opens task details", () => {
-    cy.intercept("POST", `${API}/auth/v1/token*`, { body: session });
+    cy.intercept("POST", `${API}/auth/login`, { body: { token: TOKEN, user: USER } });
     cy.visit("/login");
     cy.get('input[type="email"]').type("stas@uzhnu.edu.ua");
     cy.get('input[type="password"]').type("secret123");
     cy.get('button[type="submit"]').click();
 
     cy.url().should("include", "/tasks");
-    cy.contains("a", "Лабораторна №6").click();
+    cy.contains("a", "Лабораторна №7").click();
     cy.url().should("include", "/tasks/t1");
-    cy.contains("h1", "Лабораторна №6");
+    cy.contains("h1", "Лабораторна №7");
   });
 
   it("shows 404 page for unknown address", () => {

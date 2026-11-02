@@ -1,12 +1,11 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { useCreateTask, useTasks, useToggleTask } from "./useTasks.js";
-import { Providers, TEST_SESSION, mockFetch } from "../test/utils.jsx";
+import { Providers, mockFetch, TEST_TOKEN } from "../test/utils.jsx";
 
 beforeEach(() => {
-  localStorage.setItem("studytrack.session", JSON.stringify(TEST_SESSION));
-  vi.stubEnv("VITE_SUPABASE_URL", "https://test.supabase.co");
-  vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-key");
+  localStorage.setItem("studytrack.token", TEST_TOKEN);
+  vi.stubEnv("VITE_API_URL", "http://localhost:3001/api");
 });
 
 afterEach(() => {
@@ -16,19 +15,19 @@ afterEach(() => {
 });
 
 test("useTasks loads tasks with the user token", async () => {
-  const fetchMock = mockFetch({ "/rest/v1/tasks": { body: [{ id: "t1", title: "Лаба" }] } });
+  const fetchMock = mockFetch({ "/tasks": { body: [{ id: "t1", title: "Лаба" }] } });
   vi.stubGlobal("fetch", fetchMock);
 
   const { result } = renderHook(() => useTasks(), { wrapper: Providers });
 
   await waitFor(() => expect(result.current.data).toHaveLength(1));
-  expect(fetchMock.calls[0].headers.Authorization).toBe("Bearer token-123");
+  expect(fetchMock.calls[0].headers.Authorization).toBe(`Bearer ${TEST_TOKEN}`);
 });
 
 test("useTasks exposes server errors", async () => {
   vi.stubGlobal(
     "fetch",
-    mockFetch({ "/rest/v1/tasks": { status: 401, body: { message: "JWT expired" } } }),
+    mockFetch({ "/tasks": { status: 401, body: { message: "JWT expired" } } }),
   );
 
   const { result } = renderHook(() => useTasks(), { wrapper: Providers });
@@ -36,28 +35,27 @@ test("useTasks exposes server errors", async () => {
   await waitFor(() => expect(result.current.error?.message).toBe("JWT expired"));
 });
 
-test("useCreateTask POSTs the task with user_id", async () => {
-  const fetchMock = mockFetch({ "/rest/v1/tasks": { body: [{ id: "t2" }] } });
+test("useCreateTask POSTs the task", async () => {
+  const fetchMock = mockFetch({ "/tasks": { body: [{ id: "t2" }] } });
   vi.stubGlobal("fetch", fetchMock);
 
   const { result } = renderHook(() => useCreateTask(), { wrapper: Providers });
-  await act(() => result.current.mutateAsync({ title: "Нове", dueAt: null, courseId: null }));
+  await act(() => result.current.mutateAsync({ title: "Нове", dueDate: null, courseId: null }));
 
   const call = fetchMock.calls[0];
   expect(call.method).toBe("POST");
-  expect(JSON.parse(call.body)).toMatchObject({ user_id: "user-1", title: "Нове", due_at: null });
+  expect(JSON.parse(call.body)).toMatchObject({ title: "Нове", dueDate: null });
 });
 
-test("useToggleTask PATCHes completed_at", async () => {
-  const fetchMock = mockFetch({ "/rest/v1/tasks": { body: [{ id: "t1" }] } });
+test("useToggleTask PATCHes status to done", async () => {
+  const fetchMock = mockFetch({ "/tasks/t1": { body: [{ id: "t1", status: "done" }] } });
   vi.stubGlobal("fetch", fetchMock);
 
   const { result } = renderHook(() => useToggleTask(), { wrapper: Providers });
   await act(() => result.current.mutateAsync({ id: "t1", done: true }));
-  await act(() => result.current.mutateAsync({ id: "t1", done: false }));
 
-  const [first, second] = fetchMock.calls.filter((c) => c.method === "PATCH");
-  expect(first.url).toContain("id=eq.t1");
-  expect(JSON.parse(first.body).completed_at).toEqual(expect.any(String));
-  expect(JSON.parse(second.body).completed_at).toBeNull();
+  const call = fetchMock.calls[0];
+  expect(call.method).toBe("PATCH");
+  expect(call.url).toContain("/tasks/t1");
+  expect(JSON.parse(call.body)).toEqual({ status: "done" });
 });

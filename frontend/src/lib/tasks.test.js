@@ -3,10 +3,16 @@ import { courseProgress, filterTasks, formatDue, getStats, isOverdue } from "./t
 
 const now = new Date("2026-10-15T12:00:00Z");
 const tasks = [
-  { id: 1, due_at: "2026-10-10T10:00:00Z", completed_at: null, course_id: "a" },
-  { id: 2, due_at: "2026-10-20T10:00:00Z", completed_at: null, course_id: "a" },
-  { id: 3, due_at: "2026-10-01T10:00:00Z", completed_at: "2026-10-02T10:00:00Z", course_id: "a" },
-  { id: 4, due_at: null, completed_at: null, course_id: "b" },
+  { id: 1, dueDate: "2026-10-10T10:00:00Z", status: "todo", completedAt: null, courseId: "a" },
+  { id: 2, dueDate: "2026-10-20T10:00:00Z", status: "todo", completedAt: null, courseId: "a" },
+  {
+    id: 3,
+    dueDate: "2026-10-01T10:00:00Z",
+    status: "done",
+    completedAt: "2026-10-02T10:00:00Z",
+    courseId: "a",
+  },
+  { id: 4, dueDate: null, status: "todo", completedAt: null, courseId: "b" },
 ];
 
 test("overdue only for active tasks with past due date", () => {

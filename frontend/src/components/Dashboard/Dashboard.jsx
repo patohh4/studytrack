@@ -1,18 +1,26 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Button from "../Button/Button.jsx";
 import Status from "../Status/Status.jsx";
 import TaskCard from "../TaskCard/TaskCard.jsx";
 import TaskForm from "../TaskForm/TaskForm.jsx";
 import { useTasks, useToggleTask } from "../../hooks/useTasks.js";
+import { useCourses } from "../../hooks/useCourses.js";
 import { calcStreak } from "../../lib/progress.js";
 import { FILTERS, filterTasks, formatDue, getStats, isDone, isOverdue } from "../../lib/tasks.js";
 import styles from "./Dashboard.module.css";
 
 export default function Dashboard() {
   const { data: tasks = [], isPending, error } = useTasks();
+  const { data: courses = [] } = useCourses();
   const toggleTask = useToggleTask();
   const [filter, setFilter] = useState("all");
   const [showForm, setShowForm] = useState(false);
+
+  const courseMap = useMemo(() => {
+    const map = new Map();
+    for (const c of courses) map.set(c.id, c.name);
+    return map;
+  }, [courses]);
 
   const stats = getStats(tasks);
   const visible = filterTasks(tasks, filter);
@@ -73,8 +81,8 @@ export default function Dashboard() {
             key={task.id}
             id={task.id}
             title={task.title}
-            course={task.courses?.name}
-            due={formatDue(task.due_at)}
+            course={courseMap.get(task.courseId)}
+            due={formatDue(task.dueDate)}
             done={isDone(task)}
             overdue={isOverdue(task)}
             onToggle={(id, done) => toggleTask.mutate({ id, done })}

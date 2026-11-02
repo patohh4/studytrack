@@ -5,11 +5,11 @@ import { mockFetch, renderApp } from "../../test/utils.jsx";
 
 beforeEach(() => {
   localStorage.clear();
-  vi.stubEnv("VITE_SUPABASE_URL", "https://test.supabase.co");
-  vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-key");
+  vi.stubEnv("VITE_API_URL", "http://localhost:3001/api");
 });
 
 afterEach(() => {
+  localStorage.clear();
   vi.unstubAllEnvs();
   vi.unstubAllGlobals();
 });
@@ -30,10 +30,7 @@ test("shows server error for wrong credentials", async () => {
   vi.stubGlobal(
     "fetch",
     mockFetch({
-      "grant_type=password": {
-        status: 400,
-        body: { error_description: "Invalid login credentials" },
-      },
+      "/auth/login": { status: 401, body: { message: "Невірний email або пароль" } },
     }),
   );
   const user = userEvent.setup();
@@ -43,22 +40,16 @@ test("shows server error for wrong credentials", async () => {
   await user.type(screen.getByLabelText("Пароль"), "wrong123");
   await user.click(screen.getByRole("button", { name: "Увійти" }));
 
-  expect(await screen.findByText("Invalid login credentials")).toBeTruthy();
+  expect(await screen.findByText("Невірний email або пароль")).toBeTruthy();
 });
 
 test("successful login opens tasks page", async () => {
   vi.stubGlobal(
     "fetch",
     mockFetch({
-      "grant_type=password": {
-        body: {
-          access_token: "jwt",
-          refresh_token: "r",
-          expires_in: 3600,
-          user: { id: "u1", email: "a@b.c" },
-        },
-      },
-      "/rest/v1/": { body: [] },
+      "/auth/login": { body: { token: "jwt", user: { id: "u1", name: "Стас", email: "a@b.c" } } },
+      "/tasks": { body: [] },
+      "/courses": { body: [] },
     }),
   );
   const user = userEvent.setup();

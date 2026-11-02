@@ -1,6 +1,7 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Button from "../Button/Button.jsx";
 import Status from "../Status/Status.jsx";
+import { useCourses } from "../../hooks/useCourses.js";
 import { useDeleteTask, useTasks, useToggleTask } from "../../hooks/useTasks.js";
 import { formatDue, isDone, isOverdue } from "../../lib/tasks.js";
 import styles from "./TaskDetails.module.css";
@@ -9,6 +10,7 @@ export default function TaskDetails() {
   const { taskId } = useParams();
   const navigate = useNavigate();
   const { data: tasks = [], isPending, error } = useTasks();
+  const { data: courses = [] } = useCourses();
   const toggleTask = useToggleTask();
   const deleteTask = useDeleteTask();
   const task = tasks.find((item) => String(item.id) === taskId);
@@ -31,6 +33,7 @@ export default function TaskDetails() {
 
   const done = isDone(task);
   const status = done ? "Виконано" : isOverdue(task) ? "Прострочено" : "В процесі";
+  const courseName = courses.find((c) => c.id === task.courseId)?.name;
 
   return (
     <section>
@@ -42,11 +45,11 @@ export default function TaskDetails() {
       <dl className={styles.info}>
         <div>
           <dt>Курс</dt>
-          <dd>{task.courses?.name ?? "Без курсу"}</dd>
+          <dd>{courseName ?? "Без курсу"}</dd>
         </div>
         <div>
           <dt>Термін</dt>
-          <dd>{formatDue(task.due_at)}</dd>
+          <dd>{formatDue(task.dueDate)}</dd>
         </div>
         <div>
           <dt>Статус</dt>

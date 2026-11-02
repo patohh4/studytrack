@@ -18,7 +18,7 @@ export default function TaskForm({ onDone }) {
     createTask.mutate(
       {
         title: title.trim(),
-        dueAt: dueAt ? new Date(dueAt).toISOString() : null,
+        dueDate: dueAt ? new Date(dueAt).toISOString() : null,
         courseId: courseId || null,
       },
       {

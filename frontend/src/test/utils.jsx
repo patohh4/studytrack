@@ -4,12 +4,8 @@ import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import AuthProvider from "../context/AuthProvider.jsx";
 import { routes } from "../routes.jsx";
 
-export const TEST_SESSION = {
-  access_token: "token-123",
-  refresh_token: "refresh-123",
-  expires_at: Math.floor(Date.now() / 1000) + 3600,
-  user: { id: "user-1", email: "stas@uzhnu.edu.ua", user_metadata: { full_name: "Станіслав" } },
-};
+export const TEST_TOKEN = "token-123";
+export const TEST_USER = { id: "user-1", name: "Станіслав", email: "stas@uzhnu.edu.ua" };
 
 export const makeClient = () =>
   new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
@@ -33,7 +29,10 @@ export function renderApp(path) {
   return router;
 }
 
-/** Підміна fetch: відповідь підбирається за частиною адреси. */
+/**
+ * Підміна fetch: відповідь підбирається за частиною адреси.
+ * Шлях перевіряється відносно base URL (http://localhost:3001/api).
+ */
 export function mockFetch(handlers) {
   const calls = [];
   const fn = async (url, options = {}) => {
@@ -41,6 +40,8 @@ export function mockFetch(handlers) {
     const key = Object.keys(handlers).find((part) => url.includes(part));
     const result = key ? handlers[key] : { status: 404, body: { message: "not mocked" } };
     const { status = 200, body = null } = typeof result === "function" ? result(options) : result;
+    // 204 No Content — Response не приймає тіло
+    if (status === 204) return new Response(null, { status });
     return new Response(body === null ? "" : JSON.stringify(body), { status });
   };
   fn.calls = calls;

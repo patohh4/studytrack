@@ -1,5 +1,4 @@
 import { Navigate } from "react-router-dom";
-import AuthCallback from "./components/AuthCallback/AuthCallback.jsx";
 import Calendar from "./components/Calendar/Calendar.jsx";
 import CourseList from "./components/CourseList/CourseList.jsx";
 import Dashboard from "./components/Dashboard/Dashboard.jsx";
@@ -11,7 +10,6 @@ import TaskDetails from "./components/TaskDetails/TaskDetails.jsx";
 
 export const routes = [
   { path: "/login", element: <Login /> },
-  { path: "/auth/callback", element: <AuthCallback /> },
   {
     element: <ProtectedRoute />,
     children: [

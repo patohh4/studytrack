@@ -6,7 +6,14 @@ import "./index.css";
 import AuthProvider from "./context/AuthProvider.jsx";
 import { routes } from "./routes.jsx";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 const router = createBrowserRouter(routes);
 
 createRoot(document.getElementById("root")).render(

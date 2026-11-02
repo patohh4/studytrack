@@ -40,9 +40,9 @@ export function todayStr() {
 export function calcStreak(tasks) {
   const days = new Set(
     tasks
-      .filter((t) => t.completed_at)
+      .filter((t) => t.completedAt)
       .map((t) => {
-        const d = new Date(t.completed_at);
+        const d = new Date(t.completedAt);
         return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
       }),
   );

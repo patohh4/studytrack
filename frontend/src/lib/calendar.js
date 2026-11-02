@@ -32,8 +32,8 @@ export function buildMonth(year, month) {
 export function groupByDay(tasks, year, month) {
   const result = {};
   for (const task of tasks) {
-    if (!task.due_at) continue;
-    const date = new Date(task.due_at);
+    if (!task.dueAt) continue;
+    const date = new Date(task.dueAt);
     if (date.getFullYear() !== year || date.getMonth() !== month) continue;
     const day = date.getDate();
     (result[day] ??= []).push(task);

@@ -1,28 +1,31 @@
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
-import { TEST_SESSION, mockFetch, renderApp } from "./test/utils.jsx";
+import { mockFetch, renderApp } from "./test/utils.jsx";
+
+const TOKEN_KEY = "studytrack.token";
 
 const tasks = [
   {
     id: "t1",
     title: "Лабораторна №6",
     description: "Реалізувати хуки",
-    due_at: "2030-01-10T10:00:00Z",
-    completed_at: null,
-    course_id: "c1",
-    courses: { name: "Веб-технології", color: "gray" },
+    dueDate: "2030-01-10T10:00:00Z",
+    status: "todo",
+    completedAt: null,
+    courseId: "c1",
   },
 ];
 
+const courses = [{ id: "c1", name: "Веб-технології" }];
+
 beforeEach(() => {
-  vi.stubEnv("VITE_SUPABASE_URL", "https://test.supabase.co");
-  vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-key");
+  vi.stubEnv("VITE_API_URL", "http://localhost:3001/api");
   vi.stubGlobal(
     "fetch",
     mockFetch({
-      "/rest/v1/tasks": { body: tasks },
-      "/rest/v1/courses": { body: [{ id: "c1", name: "Веб-технології" }] },
+      "/tasks": { body: tasks },
+      "/courses": { body: courses },
     }),
   );
 });
@@ -33,7 +36,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-const login = () => localStorage.setItem("studytrack.session", JSON.stringify(TEST_SESSION));
+const login = () => localStorage.setItem(TOKEN_KEY, "token-123");
 const heading = (name) => screen.findByRole("heading", { level: 1, name });
 
 test("redirects guests from protected pages to login", async () => {

@@ -9,16 +9,16 @@ const daysAgo = (n) => {
 
 describe("calcStreak", () => {
   test("0 for no completed tasks", () => {
-    expect(calcStreak([{ completed_at: null }])).toBe(0);
+    expect(calcStreak([{ completedAt: null }])).toBe(0);
   });
 
   test("counts consecutive days including today", () => {
-    const tasks = [0, 1, 2].map((n) => ({ completed_at: daysAgo(n) }));
+    const tasks = [0, 1, 2].map((n) => ({ completedAt: daysAgo(n) }));
     expect(calcStreak(tasks)).toBe(3);
   });
 
   test("breaks on a gap", () => {
-    const tasks = [0, 1, 3].map((n) => ({ completed_at: daysAgo(n) }));
+    const tasks = [0, 1, 3].map((n) => ({ completedAt: daysAgo(n) }));
     expect(calcStreak(tasks)).toBe(2);
   });
 });

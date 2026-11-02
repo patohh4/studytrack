@@ -1,0 +1,103 @@
+### StudyTrack API — приклади запитів (curl)
+
+# Змінні
+@host = http://localhost:3001
+@api = {{host}}/api
+@token = YOUR_JWT_TOKEN
+
+### ── Авторизація ──
+
+### Реєстрація (створює користувача + демо-дані)
+# @name register
+curl -X POST {{api}}/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Іван Франко","email":"ivan@uzhnu.edu.ua","password":"secret123"}'
+
+# Збереження токена з відповіді
+@token = {{register.response.body.token}}
+
+### Логін
+# @name login
+curl -X POST {{api}}/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"ivan@uzhnu.edu.ua","password":"secret123"}'
+
+### Поточний користувач (потрібен токен)
+curl {{api}}/auth/me \
+  -H "Authorization: Bearer {{token}}"
+
+### ── Завдання (захищені) ──
+
+### Список завдань
+curl {{api}}/tasks \
+  -H "Authorization: Bearer {{token}}"
+
+### Створити завдання
+curl -X POST {{api}}/tasks \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer {{token}}" \
+  -d '{
+    "title":"Прочитати розділ 5",
+    "description":"Підготуватись до семінару",
+    "courseId":"c1",
+    "dueDate":"2026-11-10T23:59:59Z",
+    "priority":"high"
+  }'
+
+### Оновити завдання (зміна статусу)
+curl -X PATCH {{api}}/tasks/t1 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer {{token}}" \
+  -d '{"status":"done"}'
+
+### Видалити завдання
+curl -X DELETE {{api}}/tasks/t1 \
+  -H "Authorization: Bearer {{token}}"
+
+### ── Курси (захищені) ──
+
+### Список курсів
+curl {{api}}/courses \
+  -H "Authorization: Bearer {{token}}"
+
+### Створити курс
+curl -X POST {{api}}/courses \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer {{token}}" \
+  -d '{"name":"Операційні системи"}'
+
+### ── Події (захищені) ──
+
+### Усі події
+curl {{api}}/events \
+  -H "Authorization: Bearer {{token}}"
+
+### Події за діапазоном дат (from/to)
+curl "{{api}}/events?from=2026-11-01T00:00:00Z&to=2026-11-30T23:59:59Z" \
+  -H "Authorization: Bearer {{token}}"
+
+### ── Профіль (захищений) ──
+
+### Отримати профіль
+curl {{api}}/profile \
+  -H "Authorization: Bearer {{token}}"
+
+### Оновити профіль
+curl -X PATCH {{api}}/profile \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer {{token}}" \
+  -d '{"name":"Іван Франко","avatar":"https://example.com/avatar.png"}'
+
+### ── Перевірка ──
+
+### Health check
+curl {{api}}/health
+
+### 401 без токена
+curl {{api}}/tasks
+
+### Помилка валідації (порожня назва)
+curl -X POST {{api}}/tasks \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer {{token}}" \
+  -d '{"description":"без назви"}'

@@ -10,10 +10,10 @@ export default function Login() {
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { session, signIn, signUp, signInWithGoogle } = useAuth();
+  const { isAuthenticated, signIn, signUp } = useAuth();
   const navigate = useNavigate();
 
-  if (session) return <Navigate to="/tasks" replace />;
+  if (isAuthenticated) return <Navigate to="/tasks" replace />;
 
   const update = (field) => (event) => setForm({ ...form, [field]: event.target.value });
 
@@ -24,12 +24,7 @@ export default function Login() {
     setLoading(true);
     try {
       if (isRegister) {
-        const { needsConfirmation } = await signUp(form.email, form.password, form.name);
-        if (needsConfirmation) {
-          setMessage("Реєстрація успішна. Підтвердіть пошту за листом, а потім увійдіть.");
-          setIsRegister(false);
-          return;
-        }
+        await signUp(form.name, form.email, form.password);
       } else {
         await signIn(form.email, form.password);
       }
@@ -102,14 +97,6 @@ export default function Login() {
 
             <Button type="submit" disabled={loading}>
               {isRegister ? "Зареєструватися" : "Увійти"}
-            </Button>
-            <Button
-              type="button"
-              variant="secondary"
-              icon="account_circle"
-              onClick={signInWithGoogle}
-            >
-              Продовжити з Google
             </Button>
           </form>
 

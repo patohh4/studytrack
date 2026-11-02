@@ -11,7 +11,7 @@ const links = [
 export default function Layout() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
-  const name = user?.user_metadata?.full_name || user?.email || "Користувач";
+  const name = user?.name || user?.email || "Користувач";
   const initials = name
     .split(" ")
     .map((part) => part[0])
